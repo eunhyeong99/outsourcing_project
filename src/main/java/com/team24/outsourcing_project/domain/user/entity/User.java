@@ -21,17 +21,17 @@ public class User extends Timestamped {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private UserRoleEnum role;
+    private UserRole role;
 
     private boolean isDeleted = false;
 
-    private User(final String email, final String password, final UserRoleEnum role) {
+    private User(final String email, final String password, final UserRole role) {
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    public static User create(final String email, final String password, final UserRoleEnum role) {
+    public static User create(final String email, final String password, final UserRole role) {
         return new User(email, password, role);
     }
 }

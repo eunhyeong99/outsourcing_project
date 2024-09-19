@@ -4,7 +4,6 @@ import com.team24.outsourcing_project.domain.common.entity.Timestamped;
 import com.team24.outsourcing_project.domain.menu.entity.Menu;
 import com.team24.outsourcing_project.domain.store.entity.Store;
 import com.team24.outsourcing_project.domain.user.entity.User;
-import com.team24.outsourcing_project.domain.user.entity.UserRoleEnum;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
@@ -28,16 +27,16 @@ public class Order extends Timestamped {
     private Menu menu;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatusEnum status;
+    private OrderStatus status;
 
-    private Order(final User user, final Store store, final Menu menu, final OrderStatusEnum status) {
+    private Order(final User user, final Store store, final Menu menu, final OrderStatus status) {
         this.user = user;
         this.store = store;
         this.menu = menu;
         this.status = status;
     }
 
-    public static Order create(final User user, final Store store, final Menu menu, final OrderStatusEnum status) {
+    public static Order create(final User user, final Store store, final Menu menu, final OrderStatus status) {
         return new Order(user, store, menu, status);
     }
 }
