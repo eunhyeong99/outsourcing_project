@@ -1,21 +1,21 @@
 package com.team24.outsourcing_project.domain.order.entity;
 
 public enum OrderStatusEnum {
-    ACCEPTED(Authority.ACCEPTED),
-    DELIVERING(Authority.DELIVERING),
-    COMPLETED(Authority.COMPLETED);
+    ACCEPTED(OrderStatus.ACCEPTED),
+    DELIVERING(OrderStatus.DELIVERING),
+    COMPLETED(OrderStatus.COMPLETED);
 
-    private final String authority;
+    private final String orderStatus;
 
-    OrderStatusEnum(String authority) {
-        this.authority = authority;
+    OrderStatusEnum(String OrderStatus) {
+        this.orderStatus = OrderStatus;
     }
 
-    public String getAuthority() {
-        return this.authority;
+    public String getOrderStatus() {
+        return this.orderStatus;
     }
 
-    public static class {
+    public static class OrderStatus{
         public static final String ACCEPTED = "ROLE_ACCEPTED";
         public static final String DELIVERING = "ROLE_DELIVERING";
         public static final String COMPLETED = "ROLE_COMPLETED";

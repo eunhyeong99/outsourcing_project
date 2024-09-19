@@ -28,7 +28,7 @@ public class Store extends Timestamped {
     private int minOrderPrice;
 
     @Enumerated(EnumType.STRING)
-    private StoreRoleEnum role;
+    private StoreStatus role;
 
     @Column(nullable = false)
     private Time openTime;
@@ -40,7 +40,8 @@ public class Store extends Timestamped {
     @JoinColumn(name ="user_id", nullable = false)
     private User user;
 
-    private Store(final String name, final int minOrderPrice, final StoreRoleEnum role, final Time openTime, final Time closeTime, final User user)
+
+    private Store(final String name, final int minOrderPrice, final StoreStatus role, final Time openTime, final Time closeTime, final User user)
     {
         this.name = name;
         this.minOrderPrice = minOrderPrice;
@@ -49,12 +50,9 @@ public class Store extends Timestamped {
         this.closeTime = closeTime;
         this.user = user;
     }
-    private static Store createStore(final String name, final int minOrderPrice, final StoreRoleEnum role, final Time openTime, final Time closeTime, final User user)
+
+    private static Store createStore(final String name, final int minOrderPrice, final StoreStatus role, final Time openTime, final Time closeTime, final User user)
     {
         return new Store(name,minOrderPrice,role,openTime,closeTime,user);
     }
-
-
-
-
 }
