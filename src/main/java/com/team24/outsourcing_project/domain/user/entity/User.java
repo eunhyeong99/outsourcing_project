@@ -3,11 +3,13 @@ package com.team24.outsourcing_project.domain.user.entity;
 import com.team24.outsourcing_project.domain.common.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class User extends Timestamped {
 
     @Id
