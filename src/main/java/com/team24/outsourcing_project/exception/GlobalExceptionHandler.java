@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         int statusCode = HttpStatus.BAD_REQUEST.value();
-        String message = HttpStatus.BAD_REQUEST.getReasonPhrase();
+        String message = "잘못된 요청입니다.";
         ErrorResponse errorResponse = ErrorResponse.of(statusCode, message);
 
         for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
