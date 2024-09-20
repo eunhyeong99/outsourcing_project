@@ -1,5 +1,7 @@
 package com.team24.outsourcing_project.domain.store.controller;
 
+import com.team24.outsourcing_project.domain.common.annotation.Auth;
+import com.team24.outsourcing_project.domain.common.dto.AuthUser;
 import com.team24.outsourcing_project.domain.store.dto.StoreRequestDto;
 import com.team24.outsourcing_project.domain.store.dto.StoreResponseDto;
 import com.team24.outsourcing_project.domain.store.dto.StoreSimpleResponseDto;
@@ -20,30 +22,34 @@ public class StoreController {
     private final StoreService storeService;
 
     @PostMapping("/stores")
-    private void createStore(@RequestBody StoreRequestDto storeRequestDto)
+    private void createStore(@Auth AuthUser authUser, @RequestBody StoreRequestDto storeRequestDto)
     {
-        storeService.createStore(storeRequestDto);
+        storeService.createStore(authUser,storeRequestDto);
     }
     @GetMapping("/stores/{id}")
-    private StoreResponseDto getStore(@PathVariable Long id)
+    private StoreResponseDto getStore(@Auth AuthUser authUser, @PathVariable Long id)
     {
-        Store store = storeService.getStore(id);
-        StoreResponseDto storeResponseDto = StoreResponseDto.of(store.getUser().getId(),store.getName(),store.getMinOrderPrice(),store.getOpenTime(),store.getCloseTime(),store.getMenuList());
+        StoreResponseDto storeResponseDto = storeService.getStore(authUser,id);
         return storeResponseDto;
 
     }
     @GetMapping("/stores")
-    private List<StoreSimpleResponseDto> getStores()
+    private List<StoreSimpleResponseDto> getStores(@Auth AuthUser authUser)
     {
-        List<Store> storeList = storeService.getStores();
-        return storeList.stream().map(store -> StoreSimpleResponseDto.of(store.getId(), store.getName(), store.getMinOrderPrice(),
-                store.getOpenTime(),store.getCloseTime())).collect(Collectors.toList());
+        List<StoreSimpleResponseDto> storeList = storeService.getStores(authUser);
+        return storeList;
     }
 
     @PutMapping("/stores/{storeId}")
-    private void updateStore(@RequestBody StoreRequestDto storeRequestDto, @PathVariable Long id)
+    private void updateStore(@Auth AuthUser authUser,@PathVariable Long storeId, @RequestBody StoreRequestDto storeRequestDto)
     {
-        storeService.updateStore(storeRequestDto,id);
+        storeService.updateStore(authUser,storeId,storeRequestDto);
+    }
+
+    @DeleteMapping("/stores/{storeId}")
+    private void deleteStore(@Auth AuthUser authUser, @PathVariable Long storeId)
+    {
+        storeService.deleteStore(authUser,storeId);
     }
 
 }

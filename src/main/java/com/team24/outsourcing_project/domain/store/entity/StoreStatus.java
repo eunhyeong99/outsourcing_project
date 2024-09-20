@@ -17,4 +17,5 @@ public enum StoreStatus{
         return this.description;
     }
 
+
 }

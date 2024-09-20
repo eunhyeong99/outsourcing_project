@@ -6,7 +6,6 @@ import java.sql.Time;
 
 @Getter
 public class StoreRequestDto {
-    private Long userId;
     private String name;
     private int minOrderPrice;
     private Time openTime;
