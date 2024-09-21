@@ -4,17 +4,19 @@ import lombok.Getter;
 
 @Getter
 public enum OrderStatus {
-    ACCEPTED("주문 수락"),
-    DELIVERING("배달 중"),
-    COMPLETED("배달 완료");
 
-    private final String description;
+  PENDING("주문 접수"),
+  ACCEPTED("주문 수락"),
+  DELIVERING("배달 중"),
+  COMPLETED("배달 완료");
 
-    OrderStatus(String description) {
-        this.description = description;
-    }
+  private final String description;
 
-    public String getOrderStatus() {
-        return this.description;
-    }
+  OrderStatus(String description) {
+    this.description = description;
+  }
+
+  public String getOrderStatus() {
+    return this.description;
+  }
 }

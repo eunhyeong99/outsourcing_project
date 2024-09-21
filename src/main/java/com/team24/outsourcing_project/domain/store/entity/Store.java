@@ -17,42 +17,44 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Store extends Timestamped {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(nullable = false)
-    private String name;
+  @Column(nullable = false)
+  private String name;
 
-    @Column(nullable = false)
-    private int minOrderPrice;
+  @Column(nullable = false)
+  private int minOrderPrice;
 
-    @Enumerated(EnumType.STRING)
-    private StoreStatus role;
+  @Enumerated(EnumType.STRING)
+  private StoreStatus role;
 
-    @Column(nullable = false)
-    private Time openTime;
+  @Column(nullable = false)
+  private Time openTime;
 
-    @Column(nullable = false)
-    private Time closeTime;
+  @Column(nullable = false)
+  private Time closeTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="user_id", nullable = false)
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
 
-    private Store(final String name, final int minOrderPrice, final StoreStatus role, final Time openTime, final Time closeTime, final User user)
-    {
-        this.name = name;
-        this.minOrderPrice = minOrderPrice;
-        this.role = role;
-        this.openTime = openTime;
-        this.closeTime = closeTime;
-        this.user = user;
-    }
+  private Store(final String name, final int minOrderPrice, final StoreStatus role,
+      final Time openTime, final Time closeTime, final User user) {
+    this.name = name;
+    this.minOrderPrice = minOrderPrice;
+    this.role = role;
+    this.openTime = openTime;
+    this.closeTime = closeTime;
+    this.user = user;
+  }
 
-    private static Store createStore(final String name, final int minOrderPrice, final StoreStatus role, final Time openTime, final Time closeTime, final User user)
-    {
-        return new Store(name,minOrderPrice,role,openTime,closeTime,user);
-    }
+  private static Store createStore(final String name, final int minOrderPrice,
+      final StoreStatus role, final Time openTime, final Time closeTime, final User user) {
+    return new Store(name, minOrderPrice, role, openTime, closeTime, user);
+  }
+
+
 }

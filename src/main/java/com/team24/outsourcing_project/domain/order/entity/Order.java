@@ -4,7 +4,16 @@ import com.team24.outsourcing_project.domain.common.entity.Timestamped;
 import com.team24.outsourcing_project.domain.menu.entity.Menu;
 import com.team24.outsourcing_project.domain.store.entity.Store;
 import com.team24.outsourcing_project.domain.user.entity.User;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +39,7 @@ public class Order extends Timestamped {
   @JoinColumn(name = "menu_id")
   private Menu menu;
 
+  @Getter
   @Enumerated(EnumType.STRING)
   private OrderStatus status;
 
@@ -43,6 +53,15 @@ public class Order extends Timestamped {
   public static Order create(final User user, final Store store, final Menu menu,
       final OrderStatus status) {
     return new Order(user, store, menu, status);
+  }
+
+  public static Order status(final User user, final Store store, final Menu menu,
+      final OrderStatus status) {
+    return new Order(user, store, menu, status);
+  }
+
+  public Order accept() {
+    return new Order(this.user, this.store, this.menu, OrderStatus.ACCEPTED);
   }
 
   public boolean isSameStatus(final OrderStatus status) {
