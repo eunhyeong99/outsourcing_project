@@ -31,35 +31,33 @@ public class MenuService {
                 menuRequestDto.getMenuPrice()
 
         );
-
         menuRepository.save(menu);
     }
 
     @Transactional
     public void updateMenus(MenuRequestDto menuRequestDto, Long id) {
-
+        Store store = storeRepository.findById(menuRequestDto.getStoreId()).orElse(null);
         Menu menu = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 id를 찾을 수 없습니다."));
-
         menu.updateMenu(menuRequestDto.getMenuName(), menuRequestDto.getMenuPrice());
-
         menuRepository.save(menu);
     }
 
-    public List<MenuResponseDto> getMenus(Long storeId) {
-
-        Store store = storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("해당 id를 찾을 수 없습니다."));
-
-        List<Menu> menus = store.getMenuList();
-
-        return menus.stream()
-                .map(menu -> new MenuResponseDto(menu.getMenuName(), menu.getMenuPrice()))
-                .collect(Collectors.toList());
-    }
+//    public List<MenuResponseDto> getMenus(Long storeId) {
+//
+//        Store store = storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("해당 id를 찾을 수 없습니다."));
+//
+//        List<Menu> menus = store.getMenuList();
+//
+//        return menus.stream()
+//                .map(menu -> new MenuResponseDto(menu.getMenuName(), menu.getMenuPrice()))
+//                .collect(Collectors.toList());
+//    }
 
     @Transactional
     public void deleteMenus(Long id) {
         Menu menu = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 id를 찾을 수 없습니다."));
         menuRepository.delete(menu);
+
     }
 
 }

@@ -31,15 +31,15 @@ public class MenuController {
         return "수정 완료.";
     }
 
-    @GetMapping("/menus/{storeId}")
-    public List<MenuResponseDto> getMenus(@PathVariable(name = "storeId") Long storeId) {
-
-        // Fetch the menu list from the service
-        List<MenuResponseDto> menuResponseDtos = menuService.getMenus(storeId);
-
-        // Return the list of MenuResponseDto
-        return menuResponseDtos;
-    }
+//    @GetMapping("/menus/{storeId}")
+//    public List<MenuResponseDto> getMenus(@PathVariable(name = "storeId") Long storeId) {
+//
+//        // Fetch the menu list from the service
+//        List<MenuResponseDto> menuResponseDtos = menuService.getMenus(storeId);
+//
+//        // Return the list of MenuResponseDto
+//        return menuResponseDtos;
+//    }
 
     @DeleteMapping("/menus/{id}")
     public String deleteMenus(@PathVariable Long id) {

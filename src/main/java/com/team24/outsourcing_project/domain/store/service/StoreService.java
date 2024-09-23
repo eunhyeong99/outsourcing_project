@@ -7,14 +7,20 @@ import com.team24.outsourcing_project.domain.store.dto.StoreRequestDto;
 import com.team24.outsourcing_project.domain.store.dto.StoreResponseDto;
 import com.team24.outsourcing_project.domain.store.dto.StoreSimpleResponseDto;
 import com.team24.outsourcing_project.domain.store.entity.Store;
+import com.team24.outsourcing_project.domain.store.entity.StoreLimit;
 import com.team24.outsourcing_project.domain.store.entity.StoreStatus;
 import com.team24.outsourcing_project.domain.store.repository.StoreRepository;
 import com.team24.outsourcing_project.domain.user.entity.User;
 import com.team24.outsourcing_project.domain.user.entity.UserRole;
 import com.team24.outsourcing_project.domain.user.repository.UserRepository;
+import com.team24.outsourcing_project.exception.ApplicationException;
+import com.team24.outsourcing_project.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.web.embedded.TomcatVirtualThreadsWebServerFactoryCustomizer;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,44 +29,133 @@ import java.util.stream.Collectors;
 public class StoreService {
     private final StoreRepository storeRepository;
     private final UserRepository userRepository;
-    private final MenuRepository menuRepository;
 
     public void createStore(AuthUser authUser, StoreRequestDto storeRequestDto) {
-        User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
-        if(user.getRole() == UserRole.OWNER) {
-            Store store = Store.createStore(storeRequestDto.getName(), storeRequestDto.getMinOrderPrice(),StoreStatus.OPEN, storeRequestDto.getOpenTime(), storeRequestDto.getCloseTime(), user);
-            storeRepository.save(store);
+        User user = userRepository.findById(authUser.getId())
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+        validateOwner(user);
+        validateTimes(storeRequestDto.getOpenTime(),storeRequestDto.getCloseTime());
+        validateMinOrderPrice(storeRequestDto.getMinOrderPrice());
+        if(hasExceededStoreLimit(user.getId()))
+        {
+            throw new ApplicationException(ErrorCode.STORE_MAX_OUT);
         }
-        else
-            throw new RuntimeException("사장이 아닙니다.");
+
+        Store store = Store.createStore(
+                storeRequestDto.getName(),
+                storeRequestDto.getMinOrderPrice(),
+                StoreStatus.OPEN,
+                storeRequestDto.getOpenTime(),
+                storeRequestDto.getCloseTime(),
+                user
+        );
+        storeRepository.save(store);
     }
 
     public StoreResponseDto getStore(AuthUser authUser, Long id) {
-        User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
+        User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+        if(user.getRole() != UserRole.USER)
+        {
+            throw new ApplicationException(ErrorCode.NOT_USER);
+        }
+
         Store store = storeRepository.findByIdAndRole(id,StoreStatus.OPEN);
-        List<Menu> menuList = menuRepository.findByStoreId(id);
+
+        if(store == null) {
+            throw new ApplicationException(ErrorCode.STORE_NOT_FOUND);
+        }
+
         StoreResponseDto storeResponseDto = StoreResponseDto.of(store.getUser().getId(), store.getName(), store.getMinOrderPrice(), store.getOpenTime(), store.getCloseTime(), store.getMenuList());
         return storeResponseDto;
     }
 
     public List<StoreSimpleResponseDto> getStores(AuthUser authUser) {
-        User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
+        User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+        if(user.getRole() != UserRole.USER)
+        {
+            throw new ApplicationException(ErrorCode.NOT_USER);
+        }
         List<Store> storeList = storeRepository.findAllByUserIdAndRole(user.getId(),StoreStatus.OPEN);
+        if(storeList.isEmpty())
+        {
+            throw new ApplicationException(ErrorCode.STORE_NOT_FOUND);
+        }
+
         return storeList.stream().map(store -> StoreSimpleResponseDto.of(store.getId(), store.getName(), store.getMinOrderPrice(),
                 store.getOpenTime(), store.getCloseTime())).collect(Collectors.toList());
     }
-
+    @Transactional
     public void updateStore(AuthUser authUser,Long id, StoreRequestDto storeRequestDto) {
-        User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
-        Store store = storeRepository.findById(id).orElseThrow(() -> new RuntimeException("가게를 찾지 못했습니다."));
-        store.update(storeRequestDto.getName(),store.getMinOrderPrice(),store.getOpenTime(),store.getCloseTime());
+        User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+        validateOwner(user);
+
+        if(user.getRole() != UserRole.OWNER) {
+            throw new ApplicationException(ErrorCode.NOT_OWNER);
+
+        }
+        Store store = storeRepository.findByIdAndRole(id,StoreStatus.OPEN);
+        if(store == null) {
+            throw new ApplicationException(ErrorCode.STORE_NOT_FOUND);
+        }
+        if(store.getRole() == StoreStatus.OUT)
+        {
+            throw new ApplicationException(ErrorCode.OUT_STORE);
+        }
+        validateTimes(storeRequestDto.getOpenTime(),storeRequestDto.getCloseTime());
+        validateMinOrderPrice(storeRequestDto.getMinOrderPrice());
+
+
+        store.update(storeRequestDto.getName(),
+                storeRequestDto.getMinOrderPrice(),
+                storeRequestDto.getOpenTime(),
+                storeRequestDto.getCloseTime());
+
         storeRepository.save(store);
     }
 
     public void deleteStore(AuthUser authUser, Long id) {
-        User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
-        Store store = storeRepository.findById(id).orElseThrow(() -> new RuntimeException("가게를 찾지 못했습니다."));
-        store.changeStatus(StoreStatus.OUT);
-        storeRepository.save(store);
+        User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+        validateOwner(user);
+
+        Store store = storeRepository.findByIdAndRole(id,StoreStatus.OPEN);
+        if(store == null) {
+            throw new ApplicationException(ErrorCode.STORE_NOT_FOUND);
+        }
+
+        try {
+            store.changeStatus(StoreStatus.OUT);
+            storeRepository.save(store);
+        } catch(ApplicationException e)
+        {
+            throw new ApplicationException(ErrorCode.STORE_STATUS_CHANGE_FAILED);
+        }
     }
+
+    private void validateMinOrderPrice(int minOrderPrice) {
+        if (minOrderPrice <= 0) {
+            throw new ApplicationException(ErrorCode.INVAILD_MINORDERPRICE);
+        }
+    }
+
+    private boolean hasExceededStoreLimit(Long userId) {
+        List<Store> storeList = storeRepository.findAllByUserIdAndRole(userId, StoreStatus.OPEN);
+        return storeList.size() >= StoreLimit.MAX_STORE_LIMIT;
+    }
+
+    public void validateTimes(LocalTime openTime, LocalTime closeTime) {
+        if (openTime.equals(closeTime)) {
+            throw new ApplicationException(ErrorCode.EQUALS_OPEN_CLOSE_TIME);
+        }
+
+    }
+    public void validateOwner(User user)
+    {
+        if(user.getRole() != UserRole.OWNER) {
+            throw new ApplicationException(ErrorCode.NOT_OWNER);
+        }
+    }
+
+
+
 }
