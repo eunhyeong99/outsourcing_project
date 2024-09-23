@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,5 +35,9 @@ public class User extends Timestamped {
 
     public static User create(final String email, final String password, final UserRole role) {
         return new User(email, password, role);
+    }
+
+    public void changeIsDeleted(boolean isDeleted) {
+        this.isDeleted = true;
     }
 }
