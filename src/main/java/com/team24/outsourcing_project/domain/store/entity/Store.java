@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -33,10 +34,10 @@ public class Store extends Timestamped {
     private StoreStatus role;
 
     @Column(nullable = false)
-    private Time openTime;
+    private LocalTime openTime;
 
     @Column(nullable = false)
-    private Time closeTime;
+    private LocalTime closeTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="user_id", nullable = false)
@@ -50,7 +51,7 @@ public class Store extends Timestamped {
     private List<Menu> menuList;
 
 
-    private Store(final String name, final int minOrderPrice, final StoreStatus role, final Time openTime, final Time closeTime,
+    private Store(final String name, final int minOrderPrice, final StoreStatus role, final LocalTime openTime, final LocalTime closeTime,
                   final User user)
     {
         this.name = name;
@@ -62,12 +63,12 @@ public class Store extends Timestamped {
 
     }
 
-    public static Store createStore(final String name, final int minOrderPrice, final StoreStatus role, final Time openTime, final Time closeTime,
+    public static Store createStore(final String name, final int minOrderPrice, final StoreStatus role, final LocalTime openTime, final LocalTime closeTime,
                                      final User user)
     {
         return new Store(name,minOrderPrice,role,openTime,closeTime,user);
     }
-    public void update(String name, int minOrderPrice,Time openTime, Time closeTime)
+    public void update(String name, int minOrderPrice, LocalTime openTime, LocalTime closeTime)
     {
         this.name = name;
         this.minOrderPrice = minOrderPrice;

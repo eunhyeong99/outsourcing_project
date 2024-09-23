@@ -22,12 +22,14 @@ public class MenuService {
 
     @Transactional
     public void createMenus(MenuRequestDto menuRequestDto) {
-
+        Store store = storeRepository.findById(menuRequestDto.getStoreId()).orElse(null);
         Menu menu = new Menu();
 
         menu.createMenu(
+                store,
                 menuRequestDto.getMenuName(),
                 menuRequestDto.getMenuPrice()
+
         );
 
         menuRepository.save(menu);
