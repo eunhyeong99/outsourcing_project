@@ -25,7 +25,7 @@ public class StoreService {
     public void createStore(AuthUser authUser, StoreRequestDto storeRequestDto) {
         User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
         if(user.getRole() == UserRole.OWNER) {
-            Store store = Store.createStore(storeRequestDto.getName(), storeRequestDto.getMinOrderPrice(), true, StoreStatus.OPEN, storeRequestDto.getOpenTime(), storeRequestDto.getCloseTime(), user);
+            Store store = Store.createStore(storeRequestDto.getName(), storeRequestDto.getMinOrderPrice(),StoreStatus.OPEN, storeRequestDto.getOpenTime(), storeRequestDto.getCloseTime(), user);
             storeRepository.save(store);
         }
         else

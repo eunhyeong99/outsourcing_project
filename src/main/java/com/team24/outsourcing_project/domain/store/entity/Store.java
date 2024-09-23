@@ -48,6 +48,7 @@ public class Store extends Timestamped {
     @OneToMany(mappedBy = "store")
     private List<Order> orderList;
 
+    @Getter
     @OneToMany(mappedBy = "store")
     private List<Menu> menuList;
 
