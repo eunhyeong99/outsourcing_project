@@ -15,13 +15,22 @@ public enum ErrorCode {
     TOKEN_EXPIRED(401, "만료된 토큰입니다."),
     UNAUTHORIZED(401, "인증에 실패했습니다."),
     UNAUTHORIZED_DELETE_USER(401,"삭제 권한이 없습니다."),
+    NOT_OWNER(401, "사장이 아닙니다."),
+    INVAILD_MINORDERPRICE(400, "최소 주문 금액에 음수가 들어갈 수 없습니다."),
+
+    STORE_MAX_OUT(403,"이미 유저의 가게가 3개 이상입니다."),
+
 
     USER_NOT_FOUND(404, "존재하지 않는 유저입니다."),
     STORE_NOT_FOUND(404, "존재하지 않는 가게입니다."),
     MENU_NOT_FOUND(404, "존재하지 않는 메뉴입니다."),
     ORDER_NOT_FOUND(404, "존재하지 않는 주문입니다."),
 
-    EMAIL_DUPLICATE(409, "이미 존재하는 이메일입니다.");
+
+    EMAIL_DUPLICATE(409, "이미 존재하는 이메일입니다."),
+    STORE_DUPLICATE(409, "이미 가게가 존재합니다.");
+
+
 
     private final int statusCode;
     private final String message;
