@@ -15,7 +15,8 @@ public enum OrderStatusEnum {
         return this.authority;
     }
 
-    public static class {
+    // Authority 클래스를 static으로 정의
+    public static class Authority {
         public static final String ACCEPTED = "ROLE_ACCEPTED";
         public static final String DELIVERING = "ROLE_DELIVERING";
         public static final String COMPLETED = "ROLE_COMPLETED";

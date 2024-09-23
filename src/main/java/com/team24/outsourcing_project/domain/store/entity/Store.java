@@ -6,6 +6,7 @@ import com.team24.outsourcing_project.domain.order.entity.Order;
 import com.team24.outsourcing_project.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
@@ -40,6 +41,10 @@ public class Store extends Timestamped {
     @JoinColumn(name ="user_id", nullable = false)
     private User user;
 
+    @Getter
+    @OneToMany(mappedBy = "store", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Menu> menus;
+
     private Store(final String name, final int minOrderPrice, final StoreRoleEnum role, final Time openTime, final Time closeTime, final User user)
     {
         this.name = name;
@@ -53,8 +58,6 @@ public class Store extends Timestamped {
     {
         return new Store(name,minOrderPrice,role,openTime,closeTime,user);
     }
-
-
 
 
 }
