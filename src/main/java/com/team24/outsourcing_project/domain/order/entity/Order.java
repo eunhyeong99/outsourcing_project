@@ -23,48 +23,51 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Order extends Timestamped {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id")
-  private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "store_id")
-  private Store store;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
+    private Store store;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "menu_id")
-  private Menu menu;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menu_id")
+    private Menu menu;
 
-  @Getter
-  @Enumerated(EnumType.STRING)
-  private OrderStatus status;
+    @Getter
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
-  private Order(final User user, final Store store, final Menu menu, final OrderStatus status) {
-    this.user = user;
-    this.store = store;
-    this.menu = menu;
-    this.status = status;
-  }
+    private Order(final User user, final Store store, final Menu menu, final OrderStatus status) {
+        this.user = user;
+        this.store = store;
+        this.menu = menu;
+        this.status = status;
+    }
 
-  public static Order create(final User user, final Store store, final Menu menu,
-      final OrderStatus status) {
-    return new Order(user, store, menu, status);
-  }
+    public static Order create(final User user, final Store store, final Menu menu,
+            final OrderStatus status) {
+        return new Order(user, store, menu, status);
+    }
 
-  public static Order status(final User user, final Store store, final Menu menu,
-      final OrderStatus status) {
-    return new Order(user, store, menu, status);
-  }
+    public void statusDelivering() {
+        this.status = OrderStatus.DELIVERING;
+    }
 
-  public Order accept() {
-    return new Order(this.user, this.store, this.menu, OrderStatus.ACCEPTED);
-  }
+    public void statusCompleted() {
+        this.status = OrderStatus.COMPLETED;
+    }
 
-  public boolean isSameStatus(final OrderStatus status) {
-    return this.status == status;
-  }
+    public void accept() {
+        this.status = OrderStatus.ACCEPTED;
+    }
+
+    public boolean isSameStatus(final OrderStatus status) {
+        return this.status == status;
+    }
 }

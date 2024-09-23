@@ -1,5 +1,6 @@
 package com.team24.outsourcing_project.domain.order.service;
 
+import com.team24.outsourcing_project.domain.common.dto.AuthUser;
 import com.team24.outsourcing_project.domain.menu.entity.Menu;
 import com.team24.outsourcing_project.domain.menu.repository.MenuRepository;
 import com.team24.outsourcing_project.domain.order.dto.OrderAcceptResponseDto;
@@ -13,6 +14,7 @@ import com.team24.outsourcing_project.domain.user.entity.User;
 import com.team24.outsourcing_project.domain.user.entity.UserRole;
 import com.team24.outsourcing_project.domain.user.repository.UserRepository;
 import com.team24.outsourcing_project.exception.ApplicationException;
+import com.team24.outsourcing_project.exception.ErrorCode;
 import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,69 +32,66 @@ public class OrderService {
 
     // 주문 생성
     @Transactional
-    public Order createOrder(Long userId, Long storeId, Long menuId) {
-        Store store = storeRepository.findById(storeId).orElseThrow();
-        Menu menu = menuRepository.findById(menuId).orElseThrow();
-        User user = userRepository.findById(userId).orElseThrow();
+    public void createOrder(Long userId, Long storeId, Long menuId) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다."));
+        Menu menu = menuRepository.findById(menuId)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다."));
 
-        // TODO 스토어와 메뉴에서 확인 후 수정 필요
-        if (store.getMinOrderPrice() > menu.getMenuPrice()) {
-            throw new ApplicationException(null); // TODO 최소 주문 금액 예외처리 필요
+        if (store.getMinOrderPrice() >= menu.getMenuPrice()) {
+            throw new ApplicationException(ErrorCode.MIN_ORDER_PRICE);
         }
 
-        // TODO 스토어 오픈시간, 클로징시간 확인 후 수정 필요
         LocalTime now = LocalTime.now();
         if (now.isBefore(store.getOpenTime()) || now.isAfter(
                 store.getCloseTime())) {
-            throw new ApplicationException(null); // TODO 영업 시간 예외처리 필요
+            throw new ApplicationException(ErrorCode.STORE_TIME);
         }
 
         Order order = Order.create(user, store, menu, OrderStatus.PENDING);
-        return orderRepository.save(order);
+        orderRepository.save(order);
     }
 
     // 주문 수락
     @Transactional
-    public OrderAcceptResponseDto acceptOrder(Long orderId, User user) {
-        if (!UserRole.OWNER.equals(user.getRole())) {
-            throw new ApplicationException(null); // TODO 사장이 맞는지 예외처리 필요
+    public OrderAcceptResponseDto acceptOrder(Long orderId, AuthUser authUser) {
+
+        if (!UserRole.OWNER.equals(authUser.getRole())) {
+            throw new ApplicationException(ErrorCode.OWNER_ROLE);
         }
 
-        Order order = orderRepository.findById(orderId).orElseThrow();
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다."));
 
         if (!order.getStatus().equals(OrderStatus.PENDING)) {
-            throw new ApplicationException(null); // TODO 주문 상태가 PENDING인지 예외처리 필요
+            throw new ApplicationException(ErrorCode.PENDING_STATUS);
         }
 
-        Order acceptedOrder = order.accept();
-        orderRepository.save(acceptedOrder);
+        order.accept();
 
-        return new OrderAcceptResponseDto(acceptedOrder.getId(), acceptedOrder.getStatus());
+        return new OrderAcceptResponseDto(order.getId(), order.getStatus());
     }
 
     // 주문 상태
     @Transactional
-    public OrderStatusResponseDto statusOrder(Long orderId, User user, OrderStatus status) {
-        if (!UserRole.OWNER.equals(user.getRole())) {
-            throw new ApplicationException(null); // TODO 사장이 맞는지 예외처리 필요
+    public OrderStatusResponseDto statusOrder(Long orderId, AuthUser authUser) {
+        if (!UserRole.OWNER.equals(authUser.getRole())) {
+            throw new ApplicationException(ErrorCode.OWNER_ROLE);
         }
 
-        Order order = orderRepository.findById(orderId).orElseThrow();
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다."));
 
-        if (status.equals(OrderStatus.DELIVERING) && !order.getStatus()
-                .equals(OrderStatus.ACCEPTED)) {
-            throw new ApplicationException(null); // TODO 주문 수락 상태여야 배달중으로 변경 가능 예외처리 필요
+        if (order.getStatus().equals(OrderStatus.ACCEPTED)) {
+            order.statusDelivering();
+        } else if (order.getStatus().equals(OrderStatus.DELIVERING)) {
+            order.statusCompleted();
+        } else {
+            throw new ApplicationException(ErrorCode.INVALID_ORDER_STATUS);
         }
 
-        if (status.equals(OrderStatus.COMPLETED) && !order.getStatus()
-                .equals(OrderStatus.DELIVERING)) {
-            throw new ApplicationException(null); // TODO 배달중 상태여야 배달완료로 변경 가능 예외처리 필요
-        }
-
-        Order updatedOrder = Order.status(order.getUser(), order.getStore(), order.getMenu(),
-                status);
-        orderRepository.save(updatedOrder);
-
-        return new OrderStatusResponseDto(updatedOrder.getId(), updatedOrder.getStatus());
+        return new OrderStatusResponseDto(order.getId(), order.getStatus());
     }
 }
