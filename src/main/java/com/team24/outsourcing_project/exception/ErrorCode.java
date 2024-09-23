@@ -10,6 +10,7 @@ public enum ErrorCode {
     ROLE_INVALID(400, "존재하지 않는 권한입니다."),
     EMAIL_NULL(400, "잘못된 이메일입니다."),
     ALREADY_DELETED(400, "이미 탈퇴한 회원입니다." ),
+    STORE_STATUS_CHANGE_FAILED(400, "스토어 상태 변경에 실패했습니다."),
 
     PASSWORD_MISMATCH(401, "비밀번호가 일치하지 않습니다."),
     TOKEN_EXPIRED(401, "만료된 토큰입니다."),
@@ -17,6 +18,10 @@ public enum ErrorCode {
     UNAUTHORIZED_DELETE_USER(401,"삭제 권한이 없습니다."),
     NOT_OWNER(401, "사장이 아닙니다."),
     INVAILD_MINORDERPRICE(400, "최소 주문 금액에 음수가 들어갈 수 없습니다."),
+    EQUALS_OPEN_CLOSE_TIME(400, "오픈 시간과 마감 시간이 똑같을 수 없습니다"),
+    OUT_STORE(400, "폐업한 가게입니다."),
+    NOT_USER(401,"손님이 아닙니다."),
+
 
     STORE_MAX_OUT(403,"이미 유저의 가게가 3개 이상입니다."),
 

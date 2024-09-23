@@ -7,6 +7,7 @@ import com.team24.outsourcing_project.domain.store.dto.StoreResponseDto;
 import com.team24.outsourcing_project.domain.store.dto.StoreSimpleResponseDto;
 import com.team24.outsourcing_project.domain.store.entity.Store;
 import com.team24.outsourcing_project.domain.store.service.StoreService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class StoreController {
     private final StoreService storeService;
 
     @PostMapping("/stores")
-    private void createStore(@Auth AuthUser authUser, @RequestBody StoreRequestDto storeRequestDto)
+    private void createStore(@Auth AuthUser authUser, @Valid @RequestBody StoreRequestDto storeRequestDto)
     {
         storeService.createStore(authUser,storeRequestDto);
     }
@@ -41,7 +42,7 @@ public class StoreController {
     }
 
     @PutMapping("/stores/{storeId}")
-    private void updateStore(@Auth AuthUser authUser,@PathVariable Long storeId, @RequestBody StoreRequestDto storeRequestDto)
+    private void updateStore(@Auth AuthUser authUser,@PathVariable Long storeId, @Valid @RequestBody StoreRequestDto storeRequestDto)
     {
         storeService.updateStore(authUser,storeId,storeRequestDto);
     }

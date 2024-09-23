@@ -5,6 +5,7 @@ import com.team24.outsourcing_project.domain.menu.entity.Menu;
 import com.team24.outsourcing_project.domain.order.entity.Order;
 import com.team24.outsourcing_project.domain.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -36,19 +37,17 @@ public class Store extends Timestamped {
     @Column(nullable = false)
     private int minOrderPrice;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private StoreStatus role;
 
-    @NotNull
+
     @Column(nullable = false)
     private LocalTime openTime;
 
-    @NotNull
+
     @Column(nullable = false)
     private LocalTime closeTime;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="user_id", nullable = false)
     private User user;
@@ -91,5 +90,6 @@ public class Store extends Timestamped {
     {
         this.role = newStatus;
     }
+
 
 }
