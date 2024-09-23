@@ -1,6 +1,8 @@
 package com.team24.outsourcing_project.domain.store.service;
 
 import com.team24.outsourcing_project.domain.common.dto.AuthUser;
+import com.team24.outsourcing_project.domain.menu.entity.Menu;
+import com.team24.outsourcing_project.domain.menu.repository.MenuRepository;
 import com.team24.outsourcing_project.domain.store.dto.StoreRequestDto;
 import com.team24.outsourcing_project.domain.store.dto.StoreResponseDto;
 import com.team24.outsourcing_project.domain.store.dto.StoreSimpleResponseDto;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class StoreService {
     private final StoreRepository storeRepository;
     private final UserRepository userRepository;
+    private final MenuRepository menuRepository;
 
     public void createStore(AuthUser authUser, StoreRequestDto storeRequestDto) {
         User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
@@ -35,6 +38,7 @@ public class StoreService {
     public StoreResponseDto getStore(AuthUser authUser, Long id) {
         User user = userRepository.findById(authUser.getId()).orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
         Store store = storeRepository.findByIdAndRole(id,StoreStatus.OPEN);
+        List<Menu> menuList = menuRepository.findByStoreId(id);
         StoreResponseDto storeResponseDto = StoreResponseDto.of(store.getUser().getId(), store.getName(), store.getMinOrderPrice(), store.getOpenTime(), store.getCloseTime(), store.getMenuList());
         return storeResponseDto;
     }
