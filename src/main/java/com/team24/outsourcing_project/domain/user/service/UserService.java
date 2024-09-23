@@ -73,7 +73,7 @@ public class UserService {
             throw new ApplicationException(ErrorCode.ALREADY_DELETED);
         }
 
-        if (passwordEncoder.matches(deleteUserRequestDto.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(deleteUserRequestDto.getPassword(), user.getPassword())) {
             throw new ApplicationException(ErrorCode.PASSWORD_MISMATCH);
         }
 
