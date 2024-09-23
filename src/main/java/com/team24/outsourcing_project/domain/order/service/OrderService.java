@@ -36,13 +36,14 @@ public class OrderService {
     User user = userRepository.findById(userId).orElseThrow();
 
     // TODO 스토어와 메뉴에서 확인 후 수정 필요
-    if (store.getMinOrderAmount() > menu.getPrice()) {
+    if (store.getMinOrderPrice() > menu.getMenuPrice()) {
       throw new ApplicationException(null); // TODO 최소 주문 금액 예외처리 필요
     }
 
     // TODO 스토어 오픈시간, 클로징시간 확인 후 수정 필요
     LocalTime now = LocalTime.now();
-    if (now.isBefore(store.getOpeningTime()) || now.isAfter(store.getClosingTime())) {
+    if (now.isBefore(store.getOpenTime().toLocalTime()) || now.isAfter(
+        store.getCloseTime().toLocalTime())) {
       throw new ApplicationException(null); // TODO 영업 시간 예외처리 필요
     }
 
@@ -78,11 +79,11 @@ public class OrderService {
 
     Order order = orderRepository.findById(orderId).orElseThrow();
 
-    if (status.equals(OrderStatus.DELIVERING) || !order.getStatus().equals(OrderStatus.ACCEPTED)) {
+    if (status.equals(OrderStatus.DELIVERING) && !order.getStatus().equals(OrderStatus.ACCEPTED)) {
       throw new ApplicationException(null); // TODO 주문 수락 상태여야 배달중으로 변경 가능 예외처리 필요
     }
 
-    if (status.equals(OrderStatus.COMPLETED) || !order.getStatus().equals(OrderStatus.DELIVERING)) {
+    if (status.equals(OrderStatus.COMPLETED) && !order.getStatus().equals(OrderStatus.DELIVERING)) {
       throw new ApplicationException(null); // TODO 배달중 상태여야 배달완료로 변경 가능 예외처리 필요
     }
 
