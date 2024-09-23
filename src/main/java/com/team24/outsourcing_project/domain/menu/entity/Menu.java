@@ -3,12 +3,15 @@ package com.team24.outsourcing_project.domain.menu.entity;
 import com.team24.outsourcing_project.domain.common.entity.Timestamped;
 import com.team24.outsourcing_project.domain.store.entity.Store;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "menus")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@Getter
+@Setter
 public class Menu extends Timestamped {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,17 +23,19 @@ public class Menu extends Timestamped {
     @Column(nullable = false)
     private int menuPrice;
 
-    @ManyToOne
-    @JoinColumn(name = "store_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id",nullable = false)
     private Store store;
 
-    private Menu(final String menuName, final int menuPrice, final Store store) {
+
+    public void createMenu(String menuName, int menuPrice) {
         this.menuName = menuName;
         this.menuPrice = menuPrice;
-        this.store = store;
     }
 
-    public static Menu create(final String menuName, final int menuPrice, final Store store) {
-        return new Menu(menuName, menuPrice, store);
+
+    public void updateMenu(String menuName, int menuPrice) {
+        this.menuName = menuName;
+        this.menuPrice = menuPrice;
     }
 }
