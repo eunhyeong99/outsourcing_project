@@ -29,9 +29,6 @@ public class Store extends Timestamped {
     @Column(nullable = false)
     private int minOrderPrice;
 
-    @Column(nullable = false)
-    private boolean isOwner;
-
     @Enumerated(EnumType.STRING)
     private StoreStatus role;
 
@@ -52,12 +49,11 @@ public class Store extends Timestamped {
     private List<Menu> menuList;
 
 
-    private Store(final String name, final int minOrderPrice, final boolean isOwner, final StoreStatus role, final Time openTime, final Time closeTime,
+    private Store(final String name, final int minOrderPrice, final StoreStatus role, final Time openTime, final Time closeTime,
                   final User user)
     {
         this.name = name;
         this.minOrderPrice = minOrderPrice;
-        this.isOwner = isOwner;
         this.role = role;
         this.openTime = openTime;
         this.closeTime = closeTime;
@@ -65,10 +61,10 @@ public class Store extends Timestamped {
 
     }
 
-    public static Store createStore(final String name, final int minOrderPrice, final boolean isOwner, final StoreStatus role, final Time openTime, final Time closeTime,
+    public static Store createStore(final String name, final int minOrderPrice, final StoreStatus role, final Time openTime, final Time closeTime,
                                      final User user)
     {
-        return new Store(name,minOrderPrice,isOwner,role,openTime,closeTime,user);
+        return new Store(name,minOrderPrice,role,openTime,closeTime,user);
     }
     public void update(String name, int minOrderPrice,Time openTime, Time closeTime)
     {
