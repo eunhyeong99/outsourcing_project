@@ -36,7 +36,7 @@ public class JwtFilter implements Filter {
 
         String url = httpRequest.getRequestURI();
 
-        if (url.startsWith("/auth")) {
+        if (url.startsWith("/api/auth")) {
             chain.doFilter(request, response);
             return;
         }
@@ -58,6 +58,7 @@ public class JwtFilter implements Filter {
                 httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "잘못된 JWT 토큰입니다.");
                 return;
             }
+
 
             UserRole userRole = UserRole.valueOf(claims.get("userRole", String.class));
 
