@@ -40,7 +40,7 @@ public class Store extends Timestamped {
     private LocalTime closeTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name ="user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "store")
@@ -51,9 +51,9 @@ public class Store extends Timestamped {
     private List<Menu> menuList;
 
 
-    private Store(final String name, final int minOrderPrice, final StoreStatus role,
-            final LocalTime openTime, final LocalTime closeTime,
-            final User user) {
+    private Store(final String name, final int minOrderPrice, final StoreStatus role, final LocalTime openTime, final LocalTime closeTime,
+                  final User user)
+    {
         this.name = name;
         this.minOrderPrice = minOrderPrice;
         this.role = role;
@@ -63,21 +63,21 @@ public class Store extends Timestamped {
 
     }
 
-    public static Store createStore(final String name, final int minOrderPrice,
-            final StoreStatus role, final LocalTime openTime, final LocalTime closeTime,
-            final User user) {
-        return new Store(name, minOrderPrice, role, openTime, closeTime, user);
+    public static Store createStore(final String name, final int minOrderPrice, final StoreStatus role, final LocalTime openTime, final LocalTime closeTime,
+                                     final User user)
+    {
+        return new Store(name,minOrderPrice,role,openTime,closeTime,user);
     }
-
-    public void update(String name, int minOrderPrice, LocalTime openTime, LocalTime closeTime) {
+    public void update(String name, int minOrderPrice, LocalTime openTime, LocalTime closeTime)
+    {
         this.name = name;
         this.minOrderPrice = minOrderPrice;
         this.openTime = openTime;
         this.closeTime = closeTime;
 
     }
-
-    public void changeStatus(final StoreStatus newStatus) {
+    public void changeStatus(final StoreStatus newStatus)
+    {
         this.role = newStatus;
     }
 }
