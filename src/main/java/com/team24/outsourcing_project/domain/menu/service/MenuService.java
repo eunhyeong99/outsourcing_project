@@ -47,7 +47,7 @@ public class MenuService {
 
         Store store = storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("해당 id를 찾을 수 없습니다."));
 
-        List<Menu> menus = store.getMenus();
+        List<Menu> menus = store.getMenuList();
 
         return menus.stream()
                 .map(menu -> new MenuResponseDto(menu.getMenuName(), menu.getMenuPrice()))
@@ -59,6 +59,5 @@ public class MenuService {
         Menu menu = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 id를 찾을 수 없습니다."));
         menuRepository.delete(menu);
     }
-
 
 }
