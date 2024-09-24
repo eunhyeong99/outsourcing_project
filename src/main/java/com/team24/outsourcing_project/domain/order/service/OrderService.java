@@ -40,7 +40,7 @@ public class OrderService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
-        if (store.getMinOrderPrice() >= menu.getMenuPrice()) {
+        if (store.getMinOrderPrice() > menu.getMenuPrice()) {
             throw new ApplicationException(ErrorCode.MIN_ORDER_PRICE);
         }
 
