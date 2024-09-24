@@ -17,8 +17,7 @@ public class StoreResponseDto {
     private final List<Menu> menuList;
 
 
-    private StoreResponseDto(Long userId, String name, int minOrderPrice, LocalTime openTime, LocalTime closeTime, List<Menu> menuList)
-    {
+    private StoreResponseDto(Long userId, String name, int minOrderPrice, LocalTime openTime, LocalTime closeTime, List<Menu> menuList) {
         this.userId = userId;
         this.name = name;
         this.minOrderPrice = minOrderPrice;
@@ -28,8 +27,8 @@ public class StoreResponseDto {
 
 
     }
-    public static StoreResponseDto of(Long userId, String name, int minOrderPrice, LocalTime openTime, LocalTime closeTime, List<Menu> menuList)
-    {
+
+    public static StoreResponseDto of(Long userId, String name, int minOrderPrice, LocalTime openTime, LocalTime closeTime, List<Menu> menuList) {
         return new StoreResponseDto(userId, name, minOrderPrice, openTime, closeTime, menuList);
     }
 }

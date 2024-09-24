@@ -10,9 +10,12 @@ import javax.management.relation.Role;
 import java.util.List;
 
 @Repository
-public interface StoreRepository extends JpaRepository<Store,Long> {
+public interface StoreRepository extends JpaRepository<Store, Long> {
 
-    Store findByIdAndRole(Long id,StoreStatus role);
+    Store findByIdAndRole(Long id, StoreStatus role);
+
     List<Store> findAllByUserIdAndRole(Long userId, StoreStatus status);
+
+    List<Store> findAllByRole(StoreStatus status);
 
 }

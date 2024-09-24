@@ -23,34 +23,31 @@ public class StoreController {
     private final StoreService storeService;
 
     @PostMapping("/stores")
-    private void createStore(@Auth AuthUser authUser, @Valid @RequestBody StoreRequestDto storeRequestDto)
-    {
-        storeService.createStore(authUser,storeRequestDto);
+    private void createStore(@Auth AuthUser authUser, @Valid @RequestBody StoreRequestDto storeRequestDto) {
+        storeService.createStore(authUser, storeRequestDto);
     }
+
     @GetMapping("/stores/{id}")
-    private StoreResponseDto getStore(@Auth AuthUser authUser, @PathVariable Long id)
-    {
-        StoreResponseDto storeResponseDto = storeService.getStore(authUser,id);
+    private StoreResponseDto getStore(@Auth AuthUser authUser, @PathVariable Long id) {
+        StoreResponseDto storeResponseDto = storeService.getStore(authUser, id);
         return storeResponseDto;
 
     }
+
     @GetMapping("/stores")
-    private List<StoreSimpleResponseDto> getStores(@Auth AuthUser authUser)
-    {
+    private List<StoreSimpleResponseDto> getStores(@Auth AuthUser authUser) {
         List<StoreSimpleResponseDto> storeList = storeService.getStores(authUser);
         return storeList;
     }
 
     @PutMapping("/stores/{storeId}")
-    private void updateStore(@Auth AuthUser authUser,@PathVariable Long storeId, @Valid @RequestBody StoreRequestDto storeRequestDto)
-    {
-        storeService.updateStore(authUser,storeId,storeRequestDto);
+    private void updateStore(@Auth AuthUser authUser, @PathVariable Long storeId, @Valid @RequestBody StoreRequestDto storeRequestDto) {
+        storeService.updateStore(authUser, storeId, storeRequestDto);
     }
 
     @DeleteMapping("/stores/{storeId}")
-    private void deleteStore(@Auth AuthUser authUser, @PathVariable Long storeId)
-    {
-        storeService.deleteStore(authUser,storeId);
+    private void deleteStore(@Auth AuthUser authUser, @PathVariable Long storeId) {
+        storeService.deleteStore(authUser, storeId);
     }
 
 }

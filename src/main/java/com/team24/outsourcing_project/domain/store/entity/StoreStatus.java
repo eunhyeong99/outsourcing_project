@@ -3,7 +3,7 @@ package com.team24.outsourcing_project.domain.store.entity;
 import lombok.Getter;
 
 @Getter
-public enum StoreStatus{
+public enum StoreStatus {
     OPEN("영업"),
     OUT("폐업");
 
