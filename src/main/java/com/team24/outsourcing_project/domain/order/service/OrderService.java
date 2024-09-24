@@ -32,7 +32,7 @@ public class OrderService {
 
     // 주문 생성
     @Transactional
-    public void createOrder(Long userId, Long storeId, Long menuId) {
+    public Order createOrder(Long userId, Long storeId, Long menuId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
         Menu menu = menuRepository.findById(menuId)
@@ -51,7 +51,7 @@ public class OrderService {
         }
 
         Order order = Order.create(user, store, menu, OrderStatus.PENDING);
-        orderRepository.save(order);
+        return orderRepository.save(order);
     }
 
     // 주문 수락
