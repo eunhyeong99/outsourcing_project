@@ -1,5 +1,8 @@
 package com.team24.outsourcing_project.domain.menu.dto;
 
+import lombok.Getter;
+
+@Getter
 public class MenuResponseDto {
     private String menuName;
     private int menuPrice;

@@ -1,5 +1,6 @@
 package com.team24.outsourcing_project.domain.store.dto;
 
+import com.team24.outsourcing_project.domain.menu.dto.MenuResponseDto;
 import com.team24.outsourcing_project.domain.menu.entity.Menu;
 import lombok.Getter;
 
@@ -14,7 +15,7 @@ public class StoreResponseDto {
     private final int minOrderPrice;
     private final LocalTime openTime;
     private final LocalTime closeTime;
-    private final List<Menu> menuList;
+    private final List<MenuResponseDto> menuList;
 
 
     private StoreResponseDto(Long userId, String name, int minOrderPrice, LocalTime openTime, LocalTime closeTime, List<Menu> menuList) {
@@ -23,9 +24,9 @@ public class StoreResponseDto {
         this.minOrderPrice = minOrderPrice;
         this.openTime = openTime;
         this.closeTime = closeTime;
-        this.menuList = menuList;
-
-
+        this.menuList = menuList.stream()
+                .map(menu -> new MenuResponseDto(menu.getMenuName(), menu.getMenuPrice()))
+                .toList();
     }
 
     public static StoreResponseDto of(Long userId, String name, int minOrderPrice, LocalTime openTime, LocalTime closeTime, List<Menu> menuList) {
