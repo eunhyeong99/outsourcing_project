@@ -34,11 +34,11 @@ public class OrderService {
     @Transactional
     public void createOrder(Long userId, Long storeId, Long menuId) {
         Store store = storeRepository.findById(storeId)
-                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다."));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
         Menu menu = menuRepository.findById(menuId)
-                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다."));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.MENU_NOT_FOUND));
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다."));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
         if (store.getMinOrderPrice() >= menu.getMenuPrice()) {
             throw new ApplicationException(ErrorCode.MIN_ORDER_PRICE);
@@ -63,7 +63,7 @@ public class OrderService {
         }
 
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다."));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.ORDER_NOT_FOUND));
 
         if (!order.getStatus().equals(OrderStatus.PENDING)) {
             throw new ApplicationException(ErrorCode.PENDING_STATUS);
@@ -82,7 +82,7 @@ public class OrderService {
         }
 
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다."));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.ORDER_NOT_FOUND));
 
         if (order.getStatus().equals(OrderStatus.ACCEPTED)) {
             order.statusDelivering();
