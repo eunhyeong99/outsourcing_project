@@ -15,7 +15,7 @@ public enum ErrorCode {
     OWNER_ROLE(400, "OWNER 권한이 없습니다."),
     PENDING_STATUS(400, "주문 접수 상태가 아닙니다."),
     STORE_STATUS_CHANGE_FAILED(400, "스토어 상태 변경에 실패했습니다."),
-
+    REVIEW_CANNOT_BE_LEFT_ON_OWN_STORE(400, "자신의 가게에는 리뷰를 남길 수 없습니다."),
 
     PASSWORD_MISMATCH(401, "비밀번호가 일치하지 않습니다."),
     TOKEN_EXPIRED(401, "만료된 토큰입니다."),
@@ -36,7 +36,8 @@ public enum ErrorCode {
     ORDER_NOT_FOUND(404, "존재하지 않는 주문입니다."),
 
     EMAIL_DUPLICATE(409, "이미 존재하는 이메일입니다."),
-    STORE_DUPLICATE(409, "이미 가게가 존재합니다.");
+    STORE_DUPLICATE(409, "이미 가게가 존재합니다."),
+    REVIEW_DUPLICATED(409, "리뷰는 한번만 남길 수 있습니다.");
 
     private final int statusCode;
     private final String message;
