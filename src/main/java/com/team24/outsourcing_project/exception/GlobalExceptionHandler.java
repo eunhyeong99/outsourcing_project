@@ -49,4 +49,11 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.of(e.getStatusCode(), e.getMessage());
         return ResponseEntity.status(errorResponse.getStatusCode()).body(errorResponse);
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleRuntimeException(final RuntimeException e) {
+        log.error("{} - {}", e.getClass().getSimpleName(), e.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        return ResponseEntity.status(errorResponse.getStatusCode()).body(errorResponse);
+    }
 }
