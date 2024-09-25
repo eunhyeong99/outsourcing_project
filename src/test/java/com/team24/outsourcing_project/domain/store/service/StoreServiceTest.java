@@ -1,30 +1,25 @@
-package com.team24.outsourcing_project.domain.review.service;
+package com.team24.outsourcing_project.domain.store.service;
 
 
 import com.team24.outsourcing_project.domain.common.dto.AuthUser;
-import com.team24.outsourcing_project.domain.menu.entity.Menu;
 import com.team24.outsourcing_project.domain.store.dto.StoreRequestDto;
-import com.team24.outsourcing_project.domain.store.dto.StoreResponseDto;
 import com.team24.outsourcing_project.domain.store.entity.Store;
 import com.team24.outsourcing_project.domain.store.entity.StoreStatus;
 import com.team24.outsourcing_project.domain.store.repository.StoreRepository;
-import com.team24.outsourcing_project.domain.store.service.StoreService;
 import com.team24.outsourcing_project.domain.user.entity.User;
 import com.team24.outsourcing_project.domain.user.entity.UserRole;
 import com.team24.outsourcing_project.domain.user.repository.UserRepository;
-import org.hibernate.mapping.Any;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.*;
 import static org.mockito.BDDMockito.*;
+
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,11 +35,10 @@ public class StoreServiceTest {
     @Test
     public void 스토어_생성_정상동작된다() {
         AuthUser authUser = new AuthUser(1L, "test123@test.com", UserRole.OWNER);
-        User user =  User.create(authUser.getEmail(), "test123!", authUser.getRole());
-        ReflectionTestUtils.setField(user, "id",authUser.getId());
+        User user = User.create(authUser.getEmail(), "test123!", authUser.getRole());
+        ReflectionTestUtils.setField(user, "id", authUser.getId());
 
         given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-
 
         // StoreRequestDto 객체 생성
         StoreRequestDto storeRequestDto = new StoreRequestDto();

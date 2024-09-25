@@ -4,18 +4,25 @@ import com.team24.outsourcing_project.domain.common.entity.Timestamped;
 import com.team24.outsourcing_project.domain.menu.entity.Menu;
 import com.team24.outsourcing_project.domain.order.entity.Order;
 import com.team24.outsourcing_project.domain.user.entity.User;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Future;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import java.time.LocalTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.sql.Time;
-import java.time.LocalTime;
-import java.util.List;
 
 
 @Table(name = "stores")
@@ -59,8 +66,9 @@ public class Store extends Timestamped {
     private List<Menu> menuList;
 
 
-    private Store(final String name, final int minOrderPrice, final StoreStatus role, final LocalTime openTime, final LocalTime closeTime,
-                  final User user) {
+    private Store(final String name, final int minOrderPrice, final StoreStatus role,
+            final LocalTime openTime, final LocalTime closeTime,
+            final User user) {
         this.name = name;
         this.minOrderPrice = minOrderPrice;
         this.role = role;
@@ -70,8 +78,9 @@ public class Store extends Timestamped {
 
     }
 
-    public static Store createStore(final String name, final int minOrderPrice, final StoreStatus role, final LocalTime openTime, final LocalTime closeTime,
-                                    final User user) {
+    public static Store createStore(final String name, final int minOrderPrice,
+            final StoreStatus role, final LocalTime openTime, final LocalTime closeTime,
+            final User user) {
         return new Store(name, minOrderPrice, role, openTime, closeTime, user);
     }
 

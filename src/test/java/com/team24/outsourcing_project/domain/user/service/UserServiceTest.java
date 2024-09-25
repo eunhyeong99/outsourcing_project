@@ -2,7 +2,10 @@ package com.team24.outsourcing_project.domain.user.service;
 
 
 import static com.team24.outsourcing_project.domain.user.entity.UserRole.USER;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -18,14 +21,11 @@ import com.team24.outsourcing_project.domain.user.entity.User;
 import com.team24.outsourcing_project.domain.user.entity.UserRole;
 import com.team24.outsourcing_project.domain.user.repository.UserRepository;
 import com.team24.outsourcing_project.exception.ApplicationException;
-import com.team24.outsourcing_project.exception.ErrorCode;
-import jakarta.validation.constraints.NotNull;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
