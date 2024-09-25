@@ -5,25 +5,29 @@ import com.team24.outsourcing_project.domain.common.dto.AuthUser;
 import com.team24.outsourcing_project.domain.store.dto.StoreRequestDto;
 import com.team24.outsourcing_project.domain.store.dto.StoreResponseDto;
 import com.team24.outsourcing_project.domain.store.dto.StoreSimpleResponseDto;
-import com.team24.outsourcing_project.domain.store.entity.Store;
 import com.team24.outsourcing_project.domain.store.service.StoreService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class StoreController {
+
     private final StoreService storeService;
 
     @PostMapping("/stores")
-    private void createStore(@Auth AuthUser authUser, @Valid @RequestBody StoreRequestDto storeRequestDto) {
+    private void createStore(@Auth AuthUser authUser,
+            @Valid @RequestBody StoreRequestDto storeRequestDto) {
         storeService.createStore(authUser, storeRequestDto);
     }
 
@@ -41,7 +45,8 @@ public class StoreController {
     }
 
     @PutMapping("/stores/{storeId}")
-    private void updateStore(@Auth AuthUser authUser, @PathVariable Long storeId, @Valid @RequestBody StoreRequestDto storeRequestDto) {
+    private void updateStore(@Auth AuthUser authUser, @PathVariable Long storeId,
+            @Valid @RequestBody StoreRequestDto storeRequestDto) {
         storeService.updateStore(authUser, storeId, storeRequestDto);
     }
 

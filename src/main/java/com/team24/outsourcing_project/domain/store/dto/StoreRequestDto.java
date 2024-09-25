@@ -1,13 +1,11 @@
 package com.team24.outsourcing_project.domain.store.dto;
 
-import jakarta.validation.constraints.Future;
-import lombok.Getter;
-
-import java.sql.Time;
 import java.time.LocalTime;
+import lombok.Getter;
 
 @Getter
 public class StoreRequestDto {
+
     private String name;
     private int minOrderPrice;
 
